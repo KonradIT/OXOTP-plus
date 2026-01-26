@@ -22,6 +22,7 @@ String rondom_letters = "AEF2345689";      // This string contains the character
 #include<WebServer.h>
 #include <WiFiClient.h>
 #include <ESPmDNS.h>
+#include <DNSServer.h>
 #include <Update.h>
 #include<WiFiAP.h>
 #include<TOTP.h>

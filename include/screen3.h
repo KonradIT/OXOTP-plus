@@ -1,3 +1,28 @@
+// DNS Server for Captive Portal
+DNSServer dnsServer;
+const byte DNS_PORT = 53;
+bool _dnsStarted = false;
+
+// Captive portal redirect handler
+void handleCaptivePortal() {
+  previousMillis = millis();
+  server.sendHeader("Location", "http://192.168.4.1/", true);
+  server.send(302, "text/plain", "");
+}
+
+// Serve a simple redirect page for captive portal detection
+void handleCaptiveDetect() {
+  previousMillis = millis();
+  String html = "<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0;url=http://192.168.4.1/'></head><body><a href='http://192.168.4.1/'>Click here to configure OXOTP</a></body></html>";
+  server.send(200, "text/html", html);
+}
+
+// Android captive portal detection (expects 204 response, we send redirect instead)
+void handleGenerate204() {
+  previousMillis = millis();
+  server.sendHeader("Location", "http://192.168.4.1/", true);
+  server.send(302, "text/plain", "");
+}
 
 void Wifi_screen() {
 
@@ -61,6 +86,11 @@ void Wifi_screen() {
     Serial.println("Starting in AP mode");
     WiFi.mode(WIFI_AP);
     WiFi.softAP(AP_ssid, password);
+    
+    // Start DNS server for captive portal (redirect all DNS to this IP)
+    dnsServer.start(DNS_PORT, "*", WiFi.softAPIP());
+    _dnsStarted = true;
+    Serial.println("Captive portal DNS started");
   } 
   else if (Wifi_Mode != "AP" && Wifi_SSID != "") { 
     Serial.println("Starting in STA mode");
@@ -95,6 +125,11 @@ void Wifi_screen() {
     WiFi.mode(WIFI_AP);
     WiFi.softAP(AP_ssid, pass_gen);
     Serial.println("AP mode started, ssid: " + String(AP_ssid) + ", password: " + password);
+    
+    // Start DNS server for captive portal
+    dnsServer.start(DNS_PORT, "*", WiFi.softAPIP());
+    _dnsStarted = true;
+    Serial.println("Captive portal DNS started (fallback)");
   }
 
     // use mdns to resolve the hostname
@@ -143,18 +178,14 @@ void Wifi_screen() {
   if (Wifi_Mode == "AP") {
     M5.Lcd.print (Wifi_PASSWORD);
     M5.Lcd.setFreeFont(&beta5pt7b);
-    // print ip
+    // print ip / captive portal info
     if (current_screen == STICKC) {
       M5.Lcd.setCursor(10, 74);
     } else {
       M5.Lcd.setCursor(10, 110);
     }
-    // print the ip address in the screen
-    if (_mdnsStarted) {
-      M5.Lcd.print ("goto: OXOTP.local");
-    } else {
-      M5.Lcd.print ("192.168.4.1");
-    }
+    // Captive portal will auto-popup on connect
+    M5.Lcd.print("Auto-popup on connect");
 
   } else {
     if (_mdnsStarted) {
@@ -168,7 +199,35 @@ void Wifi_screen() {
   server.enableCORS();
   server.enableCrossOrigin();
 
-    // Route for serving the zipped HTML page
+  // ---- Captive Portal Detection URLs ----
+  // These URLs are checked by devices to detect captive portals
+  
+  // Android
+  server.on("/generate_204", HTTP_GET, handleGenerate204);
+  server.on("/gen_204", HTTP_GET, handleGenerate204);
+  server.on("/connecttest.txt", HTTP_GET, handleCaptiveDetect);  // Windows
+  server.on("/ncsi.txt", HTTP_GET, handleCaptiveDetect);  // Windows
+  
+  // iOS / Apple
+  server.on("/hotspot-detect.html", HTTP_GET, handleCaptiveDetect);
+  server.on("/library/test/success.html", HTTP_GET, handleCaptiveDetect);
+  
+  // Firefox
+  server.on("/success.txt", HTTP_GET, handleCaptiveDetect);
+  server.on("/canonical.html", HTTP_GET, handleCaptiveDetect);
+  
+  // Catch-all for any unhandled requests (redirect to main page)
+  server.onNotFound([]() {
+    // If it's a captive portal check or unknown URL, redirect to main page
+    if (Wifi_Mode == "AP") {
+      server.sendHeader("Location", "http://192.168.4.1/", true);
+      server.send(302, "text/plain", "");
+    } else {
+      server.send(404, "text/plain", "Not Found");
+    }
+  });
+
+  // Route for serving the zipped HTML page
   server.on("/", HTTP_GET, []() {
     previousMillis = millis();
     server.sendHeader("Content-Encoding", "gzip");
@@ -692,8 +751,20 @@ server.on("/setWifi", HTTP_POST, []() {
   // -- END OTA UPDATE API --
   
   server.begin();
+  Serial.println("HTTP server started");
+  
   while (switchscreen() == false) {
+    // Process DNS requests for captive portal
+    if (_dnsStarted) {
+      dnsServer.processNextRequest();
+    }
     server.handleClient();
+  }
+  
+  // Cleanup when leaving screen
+  if (_dnsStarted) {
+    dnsServer.stop();
+    _dnsStarted = false;
   }
   WiFi.mode(WIFI_OFF);
 }
