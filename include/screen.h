@@ -149,6 +149,7 @@ bool switchscreen() {
     }
     showmenu();
     drawBattery();
+    M5.Speaker.tone(4000, 100);
     return true;
   } showmenu();
   return false;
