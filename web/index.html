@@ -185,6 +185,24 @@
       margin-top: 0.5rem;
       color: #888;
     }
+
+    .quit-btn {
+      border-bottom: 5px #ff6666 solid;
+      padding-block: 0.6rem;
+      margin: auto;
+      color: #ff6666;
+      background: rgba(255, 102, 102, 0.1);
+      transition: all 0.25s;
+      border-radius: 20px;
+      margin-top: 3px;
+      margin-bottom: 3px;
+    }
+
+    .quit-btn:hover {
+      color: white;
+      border-color: #ff4444;
+      background-color: #ff4444;
+    }
   </style>
 </head>
 <body>
@@ -196,6 +214,7 @@
         <li><button type="button" role="tab">Config</button></li>
         <li><button type="button" role="tab">+</button></li>
         <li><button type="button" role="tab">Info</button></li>
+        <li><button type="button" id="quitBtn" class="quit-btn">Quit</button></li>
       </ul>
     </nav>
   </header>
@@ -805,6 +824,25 @@
         console.error('error!');
         alert('Error: Unable to reach the server.');
       };
+    });
+
+    // --- QUIT BUTTON ---
+    document.getElementById('quitBtn').addEventListener('click', function() {
+      if (confirm('Exit OXOTP configurator?\n\nYou can now disconnect from the OXOTP WiFi network and reconnect to your regular network.')) {
+        // Try to close the window (works for popups/captive portals)
+        window.close();
+        
+        // If window.close() is blocked, show a message
+        setTimeout(function() {
+          document.body.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; padding: 20px; font-family: sans-serif;">
+              <h1 style="color: #4CAF50;">&#10004; Configuration Complete</h1>
+              <p style="font-size: 1.2rem; margin: 20px 0;">You can now disconnect from the OXOTP WiFi network.</p>
+              <p style="color: #888;">Go to your device's WiFi settings and connect back to your regular network.</p>
+            </div>
+          `;
+        }, 500);
+      }
     });
   </script>
 </body>

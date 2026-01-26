@@ -161,4 +161,3 @@ func formatCArray(data []byte, varName string) string {
 
 	return sb.String()
 }
-
