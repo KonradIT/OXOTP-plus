@@ -10,6 +10,8 @@
 // Go to WIFI settings and connect to the specified Access point. 
 // Then go to http://192.168.4.1/ to configure
 
+#include <Arduino.h>
+
 #define maxOTPs 30                         // max OTP can hande OXOTP
 //#define timeout_ScreenOn 180000            // The time at which the OXOTP shutdown after inactivity
 
@@ -126,3 +128,4 @@ void loop() {
   switchscreen();
   
 }
+
