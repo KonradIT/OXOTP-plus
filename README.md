@@ -18,23 +18,37 @@ Build from source using Arduino IDE. [See **#HowToBuild** for more information.]
 **3.** On the **configuration** section of the webapp you can also specify your router ssid and password by changing the wireless mode to host (it will automatically fallback to AP mode if connection fails)
 -<p align="center"><img alt="confituration section" src="img/screenshot_config.png" width="200"></p>
 **4**. Click '**Sync Time**' to setup the RTC timer of the device (be sure your system / browser time is also correct) <br> <br>
-**5.** Currently you can only manually add **OTPs** by providing the **secrets** of your 2FA ( a web QRCode reader functionality may come later). <br> <br>
-You can extract the secret keys from another authenticator app you already use, for example by using [**extract_otp_secrets**](https://github.com/scito/extract_otp_secrets). <br> <br>
-(Be sure the extracted secrets are in **Base32** format e.g *'OXXA6YXXVTTP4U25'* <br> <br>
+**5.** Add OTPs using one of two methods:
+
+**Option A: Paste otpauth:// URI** (Recommended)
+- Extract URIs from your existing authenticator app using [**extract_otp_secrets**](https://github.com/scito/extract_otp_secrets)
+- Paste the `otpauth://totp/...` URI directly into the parser field
+- The form will be auto-populated with the service name, account, and secret
+
+**Option B: Manual Entry**
+- Enter the Base32 secret key manually (e.g. `OXXA6YXXVTTP4U25`)
+- Fill in the service label and username
+
 <p align="center"><img alt="add section" src="img/screenshot_add.png" width="200"></p>
 
-## HOW TO BUILD
- - Clone the repo and open *OXOTP.ino* with Arduino IDE 2.
- - Import all the dependencies: 
-	 - M5Unified library
-	 - ArduinoHTTPClient
-	 - ArduinoMDNS
-  	- Arduino_ESP32_OTA
-	 - https://github.com/lucadentella/TOTP-Arduino
-	 - https://github.com/bblanchon/ArduinoJson
-	 - https://github.com/rpolitex/ArduinoNvs
-- Select 'Minimal SPIFFS' partition scheme (required for OTA updates) 
-- Build and flash it with Arduino IDE 2
+## HOW TO BUILD (PlatformIO - Recommended)
+ - Clone the repo
+ - Install [PlatformIO](https://platformio.org/) (VS Code extension or CLI)
+ - Open the project folder in VS Code with PlatformIO extension
+ - Select the target environment:
+   - `m5stick-c` for M5StickC
+   - `m5stick-c-plus` for M5StickC Plus / Plus 2
+ - Build: `pio run -e m5stick-c-plus`
+ - Upload: `pio run -e m5stick-c-plus --target upload`
+
+All dependencies are automatically managed by PlatformIO.
+
+### Modifying the Web Interface
+If you modify `web/index.html`, regenerate the C headers:
+```bash
+go run tools/generate_headers.go
+```
+
 
 ## DEVELOPED FOR DAILY USE
 OXOTP+ is intended to be used as an alternative or backup for your currently 2FA authentication app. Using a dedicated device is great because your phone can be easily lost, stolen, hacked , etc. 
@@ -45,9 +59,10 @@ Always keep a backup (even on paper) of your secrets if you intend to use this a
 
 ### MILESTONES
  - ~~Add a battery indicator~~ DONE
- - ~~OTA updates~~  
- - ~~Beautify the UI, add an alternative Light UI~~ 
- - ~~Make poweroff timer and screen brightness tweakable~~ 
+ - ~~OTA updates~~  DONE
+ - ~~Beautify the UI, add an alternative Light UI~~ DONE
+ - ~~Make poweroff timer and screen brightness tweakable~~ DONE
+ - ~~Support otpauth:// URI parsing~~ DONE
  - Add API for Exporting secrets 
  - Add **Pincode** for the webapp
  - Embed a **QRCode** reader in the webapp
