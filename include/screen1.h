@@ -71,6 +71,7 @@ void OTP_screen() {
           (NVS.getInt(otpBool) == 1) ? search = false : false;
           firstloadScreen = true;
         }
+        M5.Speaker.tone(7000, 100);
       }
 
       size_t hmac_length = NVS.getBlobSize(String(pointer));
@@ -134,6 +135,11 @@ void OTP_screen() {
         OTP_bar = OTP_bar_x;
         M5.Lcd.fillRect(0, screen_y - 3, OTP_bar, 3, (OTP_bar < 130) ? txt_color : RED);
         M5.Lcd.fillRect(OTP_bar, screen_y - 3, screen_x - OTP_bar, 3, bg_color);
+        if (OTP_bar < 130) {
+          M5.Power.setLed(0);
+        } else {
+          M5.Power.setLed(1);
+        }
       }
     } //-----------------------------------timebar----------------------------------------//
   }
