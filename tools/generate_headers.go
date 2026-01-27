@@ -21,32 +21,12 @@ const bytesPerLine = 22
 
 func main() {
 	fmt.Println(strings.Repeat("=", 50))
-	fmt.Println("OXOTP+ Web Asset Header Generator (Go)")
+	fmt.Println("OXOTP+ Web Asset Header Generator")
 	fmt.Println(strings.Repeat("=", 50))
 	fmt.Println()
 
-	// Get project root (parent of tools directory)
-	exePath, err := os.Executable()
-	if err != nil {
-		// Fallback: use current working directory
-		exePath, _ = os.Getwd()
-	}
-
-	// Try to find project root by looking for platformio.ini
-	projectRoot := findProjectRoot(exePath)
-	if projectRoot == "" {
-		// Fallback to current directory
-		projectRoot, _ = os.Getwd()
-	}
-
-	webDir := filepath.Join(projectRoot, "web")
-	includeDir := filepath.Join(projectRoot, "include")
-
-	// Ensure include directory exists
-	if err := os.MkdirAll(includeDir, 0755); err != nil {
-		fmt.Printf("Error creating include directory: %v\n", err)
-		os.Exit(1)
-	}
+	webDir := filepath.Join(".", "web")
+	includeDir := filepath.Join(".", "include")
 
 	// Generate index.h
 	if err := generateHeader(
@@ -75,22 +55,6 @@ func main() {
 	fmt.Println("Rebuild the firmware to apply changes.")
 }
 
-// findProjectRoot walks up directories looking for platformio.ini
-func findProjectRoot(startPath string) string {
-	dir := startPath
-	for i := 0; i < 10; i++ { // Max 10 levels up
-		if _, err := os.Stat(filepath.Join(dir, "platformio.ini")); err == nil {
-			return dir
-		}
-		parent := filepath.Dir(dir)
-		if parent == dir {
-			break
-		}
-		dir = parent
-	}
-	return ""
-}
-
 // generateHeader reads a file, gzips it, and writes a C header
 func generateHeader(inputPath, outputPath, varName string) error {
 	fmt.Printf("Processing: %s\n", inputPath)
@@ -108,11 +72,13 @@ func generateHeader(inputPath, outputPath, varName string) error {
 		return fmt.Errorf("failed to create gzip writer: %w", err)
 	}
 
-	if _, err := gzWriter.Write(data); err != nil {
+	_, err = gzWriter.Write(data)
+	if err != nil {
 		return fmt.Errorf("failed to write gzip data: %w", err)
 	}
 
-	if err := gzWriter.Close(); err != nil {
+	err = gzWriter.Close()
+	if err != nil {
 		return fmt.Errorf("failed to close gzip writer: %w", err)
 	}
 
@@ -139,10 +105,7 @@ func formatCArray(data []byte, varName string) string {
 	sb.WriteString(fmt.Sprintf("const char %s[] PROGMEM = {\n", varName))
 
 	for i := 0; i < len(data); i += bytesPerLine {
-		end := i + bytesPerLine
-		if end > len(data) {
-			end = len(data)
-		}
+		end := min(i+bytesPerLine, len(data))
 
 		chunk := data[i:end]
 		hexValues := make([]string, len(chunk))
