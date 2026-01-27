@@ -148,52 +148,50 @@ void Wifi_screen() {
 
   // print the wifi settings in the screen
   if (current_screen == STICKC) {
-    M5.Lcd.setFreeFont(&beta8pt7b);
-    M5.Lcd.setCursor(10, 33);
+    M5.Lcd.setFont(&beta8pt7b);
+    M5.Lcd.setCursor(10, 15);
   } else {
-    M5.Lcd.setFreeFont(&beta10pt7b);
+    M5.Lcd.setFont(&beta10pt7b);
     M5.Lcd.setCursor(9, 36);
   }
   M5.Lcd.print ("CONNECT TO:");
 
 
   if (current_screen == STICKC) {
-    M5.Lcd.setFreeFont(&beta5pt7b);
-    M5.Lcd.setCursor(10, 48);
+    M5.Lcd.setFont(&beta5pt7b);
+    M5.Lcd.setCursor(10, 30);
   } else {
-    M5.Lcd.setFreeFont(&beta8pt7b);
+    M5.Lcd.setFont(&beta8pt7b);
     M5.Lcd.setCursor(10, 60);
   }
    M5.Lcd.print (Wifi_SSID);
 
     if (current_screen == STICKC) {
-      M5.Lcd.setFreeFont(&beta5pt7b);
-      M5.Lcd.setCursor(10, 61);
+      M5.Lcd.setFont(&beta5pt7b);
+      M5.Lcd.setCursor(10, 43);
     } else {
-      M5.Lcd.setFreeFont(&beta8pt7b);
+      M5.Lcd.setFont(&beta8pt7b);
       M5.Lcd.setCursor(10, 90);
     }
 
   // we don't want to show the password in the screen if not in AP mode
+  // only for M5StickC Plus 2
   if (Wifi_Mode == "AP") {
     M5.Lcd.print (Wifi_PASSWORD);
-    M5.Lcd.setFreeFont(&beta5pt7b);
-    // print ip / captive portal info
-    if (current_screen == STICKC) {
-      M5.Lcd.setCursor(10, 74);
-    } else {
-      M5.Lcd.setCursor(10, 110);
-    }
-    // Captive portal will auto-popup on connect
-    M5.Lcd.print("Auto-popup on connect");
 
+    if (current_screen == STICKCPLUS2) {
+      M5.Lcd.setFont(&beta5pt7b);
+      M5.Lcd.setCursor(10, 110);
+      M5.Lcd.print("Auto-popup on connect");
+    }
   } else {
     if (_mdnsStarted) {
       M5.Lcd.print ("goto: OXOTP.local");
     } else {
-    M5.Lcd.print (WiFi.localIP().toString());
+      M5.Lcd.print (WiFi.localIP().toString());
     }
   }
+
 
   //----- start server
   server.enableCORS();
@@ -726,7 +724,7 @@ server.on("/setWifi", HTTP_POST, []() {
       M5.Lcd.fillScreen(TFT_BLACK);
       // show wait icon
       show_wait_icon();
-      M5.Lcd.setFreeFont(&beta8pt7b);
+      M5.Lcd.setFont(&beta8pt7b);
       M5.Lcd.setCursor(10, 53);
       M5.Lcd.print("UPDATING...");
 
