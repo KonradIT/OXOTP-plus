@@ -148,52 +148,50 @@ void Wifi_screen() {
 
   // print the wifi settings in the screen
   if (current_screen == STICKC) {
-    M5.Lcd.setFreeFont(&beta8pt7b);
-    M5.Lcd.setCursor(10, 33);
+    M5.Lcd.setFont(&beta8pt7b);
+    M5.Lcd.setCursor(10, 15);
   } else {
-    M5.Lcd.setFreeFont(&beta10pt7b);
+    M5.Lcd.setFont(&beta10pt7b);
     M5.Lcd.setCursor(9, 36);
   }
   M5.Lcd.print ("CONNECT TO:");
 
 
   if (current_screen == STICKC) {
-    M5.Lcd.setFreeFont(&beta5pt7b);
-    M5.Lcd.setCursor(10, 48);
+    M5.Lcd.setFont(&beta5pt7b);
+    M5.Lcd.setCursor(10, 30);
   } else {
-    M5.Lcd.setFreeFont(&beta8pt7b);
+    M5.Lcd.setFont(&beta8pt7b);
     M5.Lcd.setCursor(10, 60);
   }
    M5.Lcd.print (Wifi_SSID);
 
     if (current_screen == STICKC) {
-      M5.Lcd.setFreeFont(&beta5pt7b);
-      M5.Lcd.setCursor(10, 61);
+      M5.Lcd.setFont(&beta5pt7b);
+      M5.Lcd.setCursor(10, 43);
     } else {
-      M5.Lcd.setFreeFont(&beta8pt7b);
+      M5.Lcd.setFont(&beta8pt7b);
       M5.Lcd.setCursor(10, 90);
     }
 
   // we don't want to show the password in the screen if not in AP mode
+  // only for M5StickC Plus 2
   if (Wifi_Mode == "AP") {
     M5.Lcd.print (Wifi_PASSWORD);
-    M5.Lcd.setFreeFont(&beta5pt7b);
-    // print ip / captive portal info
-    if (current_screen == STICKC) {
-      M5.Lcd.setCursor(10, 74);
-    } else {
-      M5.Lcd.setCursor(10, 110);
-    }
-    // Captive portal will auto-popup on connect
-    M5.Lcd.print("Auto-popup on connect");
 
+    if (current_screen == STICKCPLUS2) {
+      M5.Lcd.setFont(&beta5pt7b);
+      M5.Lcd.setCursor(10, 110);
+      M5.Lcd.print("Auto-popup on connect");
+    }
   } else {
     if (_mdnsStarted) {
       M5.Lcd.print ("goto: OXOTP.local");
     } else {
-    M5.Lcd.print (WiFi.localIP().toString());
+      M5.Lcd.print (WiFi.localIP().toString());
     }
   }
+
 
   //----- start server
   server.enableCORS();
@@ -529,7 +527,7 @@ void Wifi_screen() {
 
     jsondata.clear();
     int  json_counter = 0;
-    JsonArray data = jsondata.createNestedArray("OTPs");
+    JsonArray data = jsondata["OTPs"].to<JsonArray>();
 
     for (int  i = 0; i < maxOTPs; i++) {
       String  otpBool = "B" + String ((i + 1));
@@ -566,25 +564,25 @@ server.on("/setWifi", HTTP_POST, []() {
     jsondata.clear();
     deserializeJson(jsondata, server.arg(0));
 
-    if (jsondata.containsKey("mode")) {
+    if (!jsondata["mode"].isNull()) {
         String _mode = jsondata["mode"];
         NVS.setString("wifiMode", _mode);
         Wifi_Mode = _mode;
     }
 
-    if (jsondata.containsKey("ssid")) {
+    if (!jsondata["ssid"].isNull()) {
         String _ssid = jsondata["ssid"];
         NVS.setString("wifi_ssid", _ssid);
         Wifi_SSID = _ssid;
     }
 
-    if (jsondata.containsKey("password")) {
+    if (!jsondata["password"].isNull()) {
         String _pass = jsondata["password"];
         NVS.setString("wifi_password", _pass);
         Wifi_PASSWORD = _pass;
     }
 
-    if (jsondata.containsKey("passwordMode")) {
+    if (!jsondata["passwordMode"].isNull()) {
         int _passMode = jsondata["passwordMode"];
         NVS.setInt("passwordMode", _passMode);
         passwordMode = _passMode;
@@ -643,7 +641,7 @@ server.on("/setWifi", HTTP_POST, []() {
     jsondata.clear();
     deserializeJson(jsondata, server.arg(0));
 
-    if (jsondata.containsKey("brightness")) {
+    if (!jsondata["brightness"].isNull()) {
       int _brightness = jsondata["brightness"];
       // clamp the brightness value between 10 and 255
       _brightness = constrain(_brightness, 10, 255);
@@ -654,7 +652,7 @@ server.on("/setWifi", HTTP_POST, []() {
       NVS.setInt("lcd_brightness", _brightness);
     }
 
-    if (jsondata.containsKey("timeout")) {
+    if (!jsondata["timeout"].isNull()) {
       int _timeout = jsondata["timeout"];
       if (_timeout <= 0) {
         _timeout = -1;
@@ -667,12 +665,12 @@ server.on("/setWifi", HTTP_POST, []() {
       NVS.setInt("timeout_ScreenOn", _timeout);
       Serial.println("timeout_ScreenOn: " + String(timeout_ScreenOn));
 
-      if (jsondata.containsKey("bg_color")) {
+      if (!jsondata["bg_color"].isNull()) {
       bg_color = jsondata["bg_color"];
       NVS.setInt("bg_color", bg_color);
       }
 
-    if (jsondata.containsKey("txt_color")) {
+    if (!jsondata["txt_color"].isNull()) {
       txt_color = jsondata["txt_color"];
       NVS.setInt("txt_color", txt_color);
     }
@@ -726,7 +724,7 @@ server.on("/setWifi", HTTP_POST, []() {
       M5.Lcd.fillScreen(TFT_BLACK);
       // show wait icon
       show_wait_icon();
-      M5.Lcd.setFreeFont(&beta8pt7b);
+      M5.Lcd.setFont(&beta8pt7b);
       M5.Lcd.setCursor(10, 53);
       M5.Lcd.print("UPDATING...");
 

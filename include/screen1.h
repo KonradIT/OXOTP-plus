@@ -30,7 +30,7 @@ void OTP_screen() {
         } else {
           M5.Lcd.setCursor(10, 32);
         }
-        M5.Lcd.setFreeFont(&beta5pt7b);
+        M5.Lcd.setFont(&beta5pt7b);
         M5.Lcd.print("NO OTPs");
 
         if (current_screen == STICKC) {
@@ -38,7 +38,7 @@ void OTP_screen() {
         } else {
           M5.Lcd.setCursor(10, 43);
         }
-        M5.Lcd.setFreeFont(&beta5pt7b);
+        M5.Lcd.setFont(&beta5pt7b);
         M5.Lcd.print("GO TO WIFI SETUP");
 
         if (current_screen == STICKC) {
@@ -47,7 +47,7 @@ void OTP_screen() {
           M5.Lcd.setCursor(10, 60);
         }
 
-        M5.Lcd.setFreeFont(&beta8pt7b);
+        M5.Lcd.setFont(&beta8pt7b);
         M5.Lcd.print("OXOTP+");
 
         // if (current_screen == STICKC) {
@@ -90,11 +90,11 @@ void OTP_screen() {
         totpCode = String(newCode);
 
         if (current_screen == STICKC) { // set text for label
-          M5.Lcd.setCursor(10, 32);
-          M5.Lcd.setFreeFont(&beta5pt7b);
+          M5.Lcd.setCursor(10, 18);
+          M5.Lcd.setFont(&beta5pt7b);
         } else {
           M5.Lcd.setCursor(10, 31);
-          M5.Lcd.setFreeFont(&beta8pt7b);
+          M5.Lcd.setFont(&beta8pt7b);
         }
         
         String otpLabel = "L" + String(pointer);
@@ -105,9 +105,9 @@ void OTP_screen() {
         M5.Lcd.print(String(pointer) + ": " + NVS.getString(otpLabel).substring(0, charsNumber));
 
         if (current_screen == STICKC) { // set text for user
-          M5.Lcd.setCursor(10, 42);
+          M5.Lcd.setCursor(10, 30);
         } else {
-          M5.Lcd.setFreeFont(&beta5pt7b);
+          M5.Lcd.setFont(&beta5pt7b);
           M5.Lcd.setCursor(10, 47);
         }
 
@@ -115,11 +115,11 @@ void OTP_screen() {
         M5.Lcd.print(NVS.getString(otpUser).substring(0, charsNumber));
 
         if (current_screen == STICKC) { // set text for code
-          M5.Lcd.setCursor(10, 64);
-          M5.Lcd.setFreeFont(&beta15pt7b);
+          M5.Lcd.setCursor(10, 45);
+          M5.Lcd.setFont(&beta15pt7b);
         } else {
           M5.Lcd.setCursor(10, 77);
-          M5.Lcd.setFreeFont(&mishmash21pt7b);
+          M5.Lcd.setFont(&mishmash21pt7b);
         }
 
         

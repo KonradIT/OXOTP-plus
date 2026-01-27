@@ -81,36 +81,34 @@ void  Time_screen() {
       localTime = M5.Rtc.getDateTime();
       getCurrentLocalTime(&localTime, timezone_h, timezone_m);
 
-      String timedatenow = getString_2digit(localTime.time.hours) + ":" + getString_2digit(localTime.time.minutes) + ":" + getString_2digit(localTime.time.seconds);
+      String currentTime = getString_2digit(localTime.time.hours) + ":" + getString_2digit(localTime.time.minutes) + ":" + getString_2digit(localTime.time.seconds);
       
       if (current_screen == STICKC) {
-        M5.Lcd.setFreeFont(&beta15pt7b);
-        M5.Lcd.setCursor(1, 30);
+        M5.Lcd.setFont(&beta10pt7b);
+        M5.Lcd.setCursor(10, 30);
       } else {
-        M5.Lcd.setFreeFont(&mishmash21pt7b);
+        M5.Lcd.setFont(&mishmash21pt7b);
         M5.Lcd.setCursor(13, 32);
       }
       M5.Lcd.setTextColor(txt_color, bg_color);
-      M5.Lcd.print(timedatenow);
+      M5.Lcd.print(currentTime);
 
       
-      timedatenow = getString_2digit(localTime.date.date) + "/" + getString_2digit(localTime.date.month) + "/" + String(localTime.date.year);
+      String currentDate = getString_2digit(localTime.date.date) + "/" + getString_2digit(localTime.date.month) + "/" + String(localTime.date.year);
       if (current_screen == STICKC) {
-        M5.Lcd.setFreeFont(&beta10pt7b);
-        M5.Lcd.setCursor(1, 66);
-        M5.Lcd.print(timedatenow);
+        M5.Lcd.setFont(&beta10pt7b);
+        M5.Lcd.setCursor(10, 50);
+        M5.Lcd.print(currentDate);
       } else {
         // print also weekday on bigger screen
-        M5.Lcd.setFreeFont(&beta10pt7b); 
+        M5.Lcd.setFont(&beta10pt7b); 
         M5.Lcd.setCursor(13, 78);
         M5.Lcd.print(getWeekDay(localTime.date.weekDay));
 
-        M5.Lcd.setFreeFont(&beta15pt7b); // todo set 15pt font
+        M5.Lcd.setFont(&beta15pt7b); // todo set 15pt font
         M5.Lcd.setCursor(13, 98);
-        M5.Lcd.print(timedatenow);
+        M5.Lcd.print(currentDate);
       }
-      
-
     }
   }
 }
