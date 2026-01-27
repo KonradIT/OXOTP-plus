@@ -203,9 +203,74 @@
       border-color: #ff4444;
       background-color: #ff4444;
     }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: rgba(33, 33, 33, 0.95);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid var(--primary);
+      max-width: 90vw;
+      min-width: 280px;
+      animation: toastSlideIn 0.3s ease, toastFadeOut 0.3s ease forwards;
+      animation-delay: 0s, var(--toast-duration, 3s);
+      pointer-events: auto;
+      white-space: pre-line;
+    }
+
+    .toast.success {
+      border-left-color: #4CAF50;
+    }
+
+    .toast.error {
+      border-left-color: #ff6666;
+    }
+
+    .toast.warning {
+      border-left-color: #ff9800;
+    }
+
+    .toast.info {
+      border-left-color: #2196F3;
+    }
+
+    @keyframes toastSlideIn {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes toastFadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Toast notification container -->
+  <div id="toastContainer" class="toast-container"></div>
+
   <header class="container">
     <nav aria-label="breadcrumb">
       <h4 style="margin-right: 0.2rem; min-width: 40px;">OXOTP+</h4>
@@ -348,6 +413,21 @@
     // LEAVE BLANK IN PRODUCTION
     const baseUrl = '';
 
+    // --- TOAST NOTIFICATION SYSTEM ---
+    function showToast(message, type = 'info', duration = 3500) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.style.setProperty('--toast-duration', `${duration / 1000}s`);
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      // Remove toast after animation completes
+      setTimeout(() => {
+        toast.remove();
+      }, duration + 300);
+    }
+
     // --- TAB SELECTION LOGIC ---
     const _ = el => [...document.querySelectorAll(el)];
     _('[role="tab"]')[0].setAttribute('aria-current', 'true');
@@ -404,8 +484,8 @@
       })
       .then(response => response.text())
       .then(message => {
-        alert(message);
-        location.reload();
+        showToast(message, 'success');
+        setTimeout(() => location.reload(), 1500);
       })
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
@@ -435,6 +515,10 @@
 
     // --- UNIX SYNC TIME LOGIC ---
     document.getElementById('unixButton').addEventListener('click', function() {
+      syncTime(true); // Show toast on manual sync
+    });
+
+    function syncTime(showNotification = false) {
       const unixTime = Math.floor(Date.now() / 1000);
       const payload = { unix: unixTime };
 
@@ -447,12 +531,18 @@
       })
       .then(response => response.text())
       .then(message => {
-        alert(message);
+        console.log('Time synced:', message);
+        if (showNotification) {
+          showToast(message, 'success');
+        }
       })
       .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error('Time sync error:', error);
       });
-    });
+    }
+
+    // Auto-sync time on page load
+    syncTime(false);
 
     // --- SCREEN SETTINGS LOGIC ---
     function convertToRGB888(color) {
@@ -501,7 +591,7 @@
       })
       .then(response => response.text())
       .then(message => {
-        alert(message);
+        showToast(message, 'success');
       })
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
@@ -612,7 +702,7 @@
       const uri = uriInput.value.trim();
 
       if (!uri) {
-        alert('Please enter an otpauth:// URI');
+        showToast('Please enter an otpauth:// URI', 'warning');
         return;
       }
 
@@ -639,16 +729,17 @@
         }
 
         if (warnings.length > 0) {
-          alert('URI parsed successfully!\n\nNote: Non-standard parameters detected:\n' + warnings.join('\n') + '\n\nOXOTP will use default values (SHA1, 6 digits, 30s period).');
+          showToast('URI parsed! Note:\n' + warnings.join('\n') + '\nOXOTP will use defaults.', 'warning', 5000);
         } else {
-          uriInput.style.borderColor = '#4CAF50';
-          setTimeout(() => { uriInput.style.borderColor = ''; }, 2000);
+          showToast('URI parsed successfully!', 'success');
         }
 
         uriInput.value = '';
+        uriInput.style.borderColor = '#4CAF50';
+        setTimeout(() => { uriInput.style.borderColor = ''; }, 2000);
 
       } catch (error) {
-        alert(error.message);
+        showToast(error.message, 'error');
         uriInput.style.borderColor = '#ff6666';
         setTimeout(() => { uriInput.style.borderColor = ''; }, 2000);
       }
@@ -712,8 +803,8 @@
         }
       })
       .then(message => {
-        alert(message);
-        location.reload();
+        showToast(message, 'success');
+        setTimeout(() => location.reload(), 1500);
       })
       .catch(error => {
         console.error('Error deleting OTP:', error);
@@ -765,7 +856,7 @@
       })
       .then(response => response.text())
       .then(message => {
-        alert(message);
+        showToast(message, 'success');
       })
       .catch(error => {
         console.error('Error applying settings:', error);
@@ -782,7 +873,7 @@
         })
         .then(response => response.text())
         .then(message => {
-          alert(message);
+          showToast(message, 'success');
         })
         .catch(error => {
           console.error('Error resetting device:', error);
@@ -817,12 +908,12 @@
 
       xhr.onload = function() {
         console.log('success!');
-        alert('Firmware updated successfully!');
+        showToast('Firmware updated successfully!', 'success');
       };
 
       xhr.onerror = function() {
         console.error('error!');
-        alert('Error: Unable to reach the server.');
+        showToast('Error: Unable to reach the server.', 'error');
       };
     });
 

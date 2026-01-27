@@ -9,6 +9,13 @@ Reimplementation of the original **OXOTP** work of @IMSHOX, with added compatibi
 
 <p align="center"><img alt="otps section" src="img/screenshot_otps.png" width="350"></p>
 
+Further work done by @konradit to add:
+
+- ability to input an otpauth:// URI in the web app: https://github.com/KonradIT/OXOTP-plus/pull/1
+- PlatformIO compatibility for building the project
+- Captive portal support, so that when a device connects to the AP, it will automatically redirect to the web app: https://github.com/KonradIT/OXOTP-plus/pull/2
+- M5 StickC Plus2 LED + tone: https://github.com/KonradIT/OXOTP-plus/pull/3
+- Support for M5StickC
 
 ## HOW TO USE
 **1.** Grab the binaries for your specific board and flash it using [flash download tool](https://www.espressif.com/en/support/download/other-tools) (More info [HERE](https://github.com/xick/OXOTP-plus/blob/master/HOW.md) ) <br> <br>
@@ -68,9 +75,8 @@ Always keep a backup (even on paper) of your secrets if you intend to use this a
  - Embed a **QRCode** reader in the webapp
 
 ### COMPATIBILITY
-- M5StickCPLus 2
-- M5StickCPlus
-- M5Stick (not tested yet)
+- M5StickC Plus 2
+- M5Stick 
 
 ## License 
 This software is licensed under the MIT License, to read the full license <a href="LICENSE" target="_blank">HERE</a>.
