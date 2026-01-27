@@ -2,29 +2,30 @@
 
 <p align="center"><img alt="PICTURE logo" src="img/oxotp-ss2.png" width="450"></p>
 
-<b>FIRST OTP BASED ON M5StickCPlus / 2 for 2FA <br><br>
+<b>FIRST OTP BASED ON M5StickCPlus / 2 for 2FA </b><br><br>
 -------
 
-Reimplementation of the original **OXOTP** work of @IMSHOX, with added compatibility for *M5StickCPlus* and *M5StickCPlus 2*, and a new web application.
+Reimplementation of the original **OXOTP** work of [@IMSHOX](https://github.com/IMSHOX), with added compatibility for *M5StickCPlus* and *M5StickCPlus 2*, and a new web application by [xick](https://github.com/xick).
 
-<p align="center"><img alt="otps section" src="img/screenshot_otps.png" width="350"></p>
+Forked from [@xick's repo](https://github.com/xick/OXOTP-plus)
 
-Further work done by @konradit to add:
+Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 
-- ability to input an otpauth:// URI in the web app: https://github.com/KonradIT/OXOTP-plus/pull/1
+- ability to input an `otpauth://` URI in the web app: https://github.com/KonradIT/OXOTP-plus/pull/1
 - PlatformIO compatibility for building the project
 - Captive portal support, so that when a device connects to the AP, it will automatically redirect to the web app: https://github.com/KonradIT/OXOTP-plus/pull/2
 - M5 StickC Plus2 LED + tone: https://github.com/KonradIT/OXOTP-plus/pull/3
 - Support for M5StickC
 
+<p align="center"><img alt="otps section" src="img/screenshot_otps.png" width="350"></p>
+
 ## HOW TO USE
-**1.** Grab the binaries for your specific board and flash it using [flash download tool](https://www.espressif.com/en/support/download/other-tools) (More info [HERE](https://github.com/xick/OXOTP-plus/blob/master/HOW.md) ) <br> <br>
-*or* <br>
-Build from source using Arduino IDE. [See **#HowToBuild** for more information.] <br> <br>
-**2.**  For the first time use, by going to the wifi settings the **SSID** and **password** of the access point to connect for the configuration will be printed on screen. Connect at this **AP** and going to address specified (for the first time should be **http://192.168.4.1/**) <br> <br>
+
+**1.** Clone locally, using PlatformIO, and build the project for your specific board.
+**2.**  For the first time use, by going to the wifi settings the **SSID** and **password** of the access point to connect for the configuration will be printed on screen. A popup will appear on your phone to login, similar to captive portal from the airport WiFi. Click on it and the website will be loaded.
 **3.** On the **configuration** section of the webapp you can also specify your router ssid and password by changing the wireless mode to host (it will automatically fallback to AP mode if connection fails)
 -<p align="center"><img alt="confituration section" src="img/screenshot_config.png" width="200"></p>
-**4**. Click '**Sync Time**' to setup the RTC timer of the device (be sure your system / browser time is also correct) <br> <br>
+**4**. Click '**Sync Time**' to setup the RTC timer of the device (be sure your system / browser time is also correct), this is done automatically by the website config too <br> <br>
 **5.** Add OTPs using one of two methods:
 
 **Option A: Paste otpauth:// URI** (Recommended)
@@ -38,27 +39,30 @@ Build from source using Arduino IDE. [See **#HowToBuild** for more information.]
 
 <p align="center"><img alt="add section" src="img/screenshot_add.png" width="200"></p>
 
-## HOW TO BUILD (PlatformIO - Recommended)
+## HOW TO BUILD (PlatformIO - Recommended):
+
  - Clone the repo
  - Install [PlatformIO](https://platformio.org/) (VS Code extension or CLI)
  - Open the project folder in VS Code with PlatformIO extension
  - Select the target environment:
    - `m5stick-c` for M5StickC
-   - `m5stick-c-plus` for M5StickC Plus / Plus 2
- - Build: `pio run -e m5stick-c-plus`
- - Upload: `pio run -e m5stick-c-plus --target upload`
+   - `m5stick-c-plus-2` for M5StickC Plus 2
+ - Build: `pio run -e m5stick-c-plus-2`
+ - Upload: `pio run -e m5stick-c-plus-2 --target upload`
 
 All dependencies are automatically managed by PlatformIO.
 
-### Modifying the Web Interface
+### Modifying the Web Interface:
+
 If you modify `web/index.html`, regenerate the C headers:
 ```bash
 go run tools/generate_headers.go
 ```
 
 
-## DEVELOPED FOR DAILY USE
-OXOTP+ is intended to be used as an alternative or backup for your currently 2FA authentication app. Using a dedicated device is great because your phone can be easily lost, stolen, hacked , etc. 
+## DEVELOPED FOR DAILY USE:
+
+OXOTP+ is intended to be used as an alternative or backup for your currently 2FA authentication app. Using a dedicated device is great because your phone can be easily lost, stolen, hacked, etc. 
 Always keep a backup (even on paper) of your secrets if you intend to use this as your main 2FA system.
 <br>
 <p align="center"><img alt="PICTURE logo" src="img/oxotp-ss1.png" width="450"></p>
@@ -76,9 +80,10 @@ Always keep a backup (even on paper) of your secrets if you intend to use this a
 
 ### COMPATIBILITY
 - M5StickC Plus 2
-- M5Stick 
+- M5StickC
 
 ## License 
+
 This software is licensed under the MIT License, to read the full license <a href="LICENSE" target="_blank">HERE</a>.
 
 ## Credits
