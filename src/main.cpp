@@ -94,11 +94,14 @@ void setup() {
   screen_x = M5.Lcd.width();
   screen_y = M5.Lcd.height();
 
-  if (screen_x == 135) {
+  #ifdef ARDUINO_M5STICK_C
     current_screen = STICKC;
-  } else {
-    current_screen = STICKCPLUS;
-  }
+  #endif
+
+  #ifdef ARDUINO_M5STICK_C_PLUS_2
+    current_screen = STICKCPLUS2;
+  #endif
+  
 
   M5.Lcd.fillScreen(bg_color);
   M5.Lcd.setTextSize(1);

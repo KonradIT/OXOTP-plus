@@ -84,8 +84,8 @@ void  Time_screen() {
       String timedatenow = getString_2digit(localTime.time.hours) + ":" + getString_2digit(localTime.time.minutes) + ":" + getString_2digit(localTime.time.seconds);
       
       if (current_screen == STICKC) {
-        M5.Lcd.setFreeFont(&beta15pt7b);
-        M5.Lcd.setCursor(1, 30);
+        M5.Lcd.setFreeFont(&beta8pt7b);
+        M5.Lcd.setCursor(10, 30);
       } else {
         M5.Lcd.setFreeFont(&mishmash21pt7b);
         M5.Lcd.setCursor(13, 32);
@@ -96,8 +96,8 @@ void  Time_screen() {
       
       timedatenow = getString_2digit(localTime.date.date) + "/" + getString_2digit(localTime.date.month) + "/" + String(localTime.date.year);
       if (current_screen == STICKC) {
-        M5.Lcd.setFreeFont(&beta10pt7b);
-        M5.Lcd.setCursor(1, 66);
+        M5.Lcd.setFreeFont(&beta8pt7b);
+        M5.Lcd.setCursor(10, 66);
         M5.Lcd.print(timedatenow);
       } else {
         // print also weekday on bigger screen
