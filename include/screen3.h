@@ -527,7 +527,7 @@ void Wifi_screen() {
 
     jsondata.clear();
     int  json_counter = 0;
-    JsonArray data = jsondata.createNestedArray("OTPs");
+    JsonArray data = jsondata["OTPs"].to<JsonArray>();
 
     for (int  i = 0; i < maxOTPs; i++) {
       String  otpBool = "B" + String ((i + 1));
@@ -564,25 +564,25 @@ server.on("/setWifi", HTTP_POST, []() {
     jsondata.clear();
     deserializeJson(jsondata, server.arg(0));
 
-    if (jsondata.containsKey("mode")) {
+    if (!jsondata["mode"].isNull()) {
         String _mode = jsondata["mode"];
         NVS.setString("wifiMode", _mode);
         Wifi_Mode = _mode;
     }
 
-    if (jsondata.containsKey("ssid")) {
+    if (!jsondata["ssid"].isNull()) {
         String _ssid = jsondata["ssid"];
         NVS.setString("wifi_ssid", _ssid);
         Wifi_SSID = _ssid;
     }
 
-    if (jsondata.containsKey("password")) {
+    if (!jsondata["password"].isNull()) {
         String _pass = jsondata["password"];
         NVS.setString("wifi_password", _pass);
         Wifi_PASSWORD = _pass;
     }
 
-    if (jsondata.containsKey("passwordMode")) {
+    if (!jsondata["passwordMode"].isNull()) {
         int _passMode = jsondata["passwordMode"];
         NVS.setInt("passwordMode", _passMode);
         passwordMode = _passMode;
@@ -641,7 +641,7 @@ server.on("/setWifi", HTTP_POST, []() {
     jsondata.clear();
     deserializeJson(jsondata, server.arg(0));
 
-    if (jsondata.containsKey("brightness")) {
+    if (!jsondata["brightness"].isNull()) {
       int _brightness = jsondata["brightness"];
       // clamp the brightness value between 10 and 255
       _brightness = constrain(_brightness, 10, 255);
@@ -652,7 +652,7 @@ server.on("/setWifi", HTTP_POST, []() {
       NVS.setInt("lcd_brightness", _brightness);
     }
 
-    if (jsondata.containsKey("timeout")) {
+    if (!jsondata["timeout"].isNull()) {
       int _timeout = jsondata["timeout"];
       if (_timeout <= 0) {
         _timeout = -1;
@@ -665,12 +665,12 @@ server.on("/setWifi", HTTP_POST, []() {
       NVS.setInt("timeout_ScreenOn", _timeout);
       Serial.println("timeout_ScreenOn: " + String(timeout_ScreenOn));
 
-      if (jsondata.containsKey("bg_color")) {
+      if (!jsondata["bg_color"].isNull()) {
       bg_color = jsondata["bg_color"];
       NVS.setInt("bg_color", bg_color);
       }
 
-    if (jsondata.containsKey("txt_color")) {
+    if (!jsondata["txt_color"].isNull()) {
       txt_color = jsondata["txt_color"];
       NVS.setInt("txt_color", txt_color);
     }

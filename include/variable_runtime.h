@@ -1,5 +1,5 @@
 // Run-Time Variables //
-StaticJsonDocument<2000> jsondata;
+JsonDocument jsondata;
 
 // m5::rtc_time_t TimeStruct;
 // m5::rtc_date_t DateStruct;

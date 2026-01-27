@@ -1,4 +1,4 @@
-name: Build heltec board
+name: Build M5StickC Plus 2 board
 
 on: [push]
 
