@@ -452,11 +452,14 @@ void Wifi_screen() {
       deserializeJson(jsondata, server.arg(0));
       time_t unix = jsondata["unix"];
       setTime(unix);
-      
+
       // from unix to rtc_datetime_t
       tm *tm_struct = gmtime(&unix);
 
       M5.Rtc.setDateTime(tm_struct);
+
+      // Store last sync time for drift detection
+      NVS.setInt("last_time_synced", (int)unix);
 
       server.send(200, "text/html", "OK");
     } else {
