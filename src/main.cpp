@@ -51,6 +51,7 @@ WebServer server(80);
 #include"screen1.h"
 #include"screen2.h"
 #include"screen3.h"
+#include"screen4.h"
 #include"math.h"
 
 void setup() {
@@ -110,7 +111,27 @@ void setup() {
   // get tm from RTC
   tm rtc_tm = M5.Rtc.getDateTime().get_tm();
   setTime(rtc_tm.tm_hour, rtc_tm.tm_min, rtc_tm.tm_sec, rtc_tm.tm_mday, rtc_tm.tm_mon + 1, rtc_tm.tm_year + 1900);
-  
+
+  // Check if time may have drifted (last sync > 15 days ago)
+  int last_synced = NVS.getInt("last_time_synced", 0);
+  if (last_synced != 0) {
+    const long fifteen_days_sec = 15L * 24 * 3600;
+    long diff = (long)now() - (long)last_synced;
+    if (diff < 0) diff = -diff;
+    if (diff > fifteen_days_sec) {
+      M5.Lcd.fillScreen(bg_color);
+      M5.Lcd.setTextColor(txt_color, bg_color);
+      M5.Lcd.setFont(&beta8pt7b);
+      M5.Lcd.setCursor(5, 25);
+      M5.Lcd.print("TIME MAY HAVE");
+      M5.Lcd.setCursor(5, 45);
+      M5.Lcd.print("DRIFTED!");
+      while (true) {
+        M5.update();
+        if (M5.BtnA.wasPressed() || M5.BtnB.wasPressed()) break;
+      }
+    }
+  }
 
 }
 
@@ -126,6 +147,9 @@ void loop() {
       break;
     case 2:
       Wifi_screen();
+      break;
+    case 3:
+      Time_drift_screen();
       break;
   }
 
