@@ -19,7 +19,7 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 - Support for original M5StickC
 - Support for Time Drift Correction, including alerting when the time is significantly out of sync
 
-<p align="center"><img alt="otps section" src="img/screenshot_otps.png" width="350"></p>
+![otps section](./img/screenshot_otps.png)
 
 ## HOW TO USE
 
@@ -29,7 +29,7 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 
 **3.** On the **configuration** section of the webapp you can also specify your router ssid and password by changing the wireless mode to host (it will automatically fallback to AP mode if connection fails)
 
-![configuration section](https://i.imgur.com/J2oZjFq.png)
+![configuration section](./img/screenshot_config.png)
 
 **4.** Click '**Sync Time**' to setup the RTC timer of the device (be sure your system / browser time is also correct), this is done automatically by the website config too <br> <br>
 
@@ -46,7 +46,11 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 - Enter the Base32 secret key manually (e.g. `OXXA6YXXVTTP4U25`)
 - Fill in the service label and username
 
-<p align="center"><img alt="add section" src="img/screenshot_add.png" width="200"></p>
+![add section](./img/screenshot_add.png)
+
+![2](./img/2.png)
+
+![3](./img/3.png)
 
 ## HOW TO BUILD (PlatformIO - Recommended):
 
