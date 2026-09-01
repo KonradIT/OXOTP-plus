@@ -77,8 +77,8 @@ void OTP_screen() {
       size_t hmac_length = NVS.getBlobSize(String(pointer));
       uint8_t hmacKey[hmac_length] = {};
       NVS.getBlob(String(pointer), hmacKey, hmac_length);
-      TOTP totp = TOTP(hmacKey, hmac_length);
-      String newCode = String(totp.getCode(now()));
+      int otpDigits = getOTPDigits(pointer);
+      String newCode = generateTOTP(hmacKey, hmac_length, now(), otpDigits);
 
 
       if (totpCode != newCode | firstloadScreen) {
@@ -114,12 +114,13 @@ void OTP_screen() {
         String otpUser = "U" + String(pointer);
         M5.Lcd.print(NVS.getString(otpUser).substring(0, charsNumber));
 
+        // 8 digit codes need a smaller font to stay inside the display width
         if (current_screen == STICKC) { // set text for code
           M5.Lcd.setCursor(10, 45);
-          M5.Lcd.setFont(&beta15pt7b);
+          M5.Lcd.setFont((otpDigits > 6) ? &beta10pt7b : &beta15pt7b);
         } else {
           M5.Lcd.setCursor(10, 77);
-          M5.Lcd.setFont(&mishmash21pt7b);
+          M5.Lcd.setFont((otpDigits > 6) ? &beta15pt7b : &mishmash21pt7b);
         }
 
         

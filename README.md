@@ -18,6 +18,7 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 - M5 StickC Plus2 LED + tone: https://github.com/KonradIT/OXOTP-plus/pull/3
 - Support for original M5StickC
 - Support for Time Drift Correction, including alerting when the time is significantly out of sync
+- Support for 8 digit OTP codes alongside the usual 6 digit ones
 
 ![otps section](./img/screenshot_otps.png)
 
@@ -45,6 +46,7 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 
 - Enter the Base32 secret key manually (e.g. `OXXA6YXXVTTP4U25`)
 - Fill in the service label and username
+- Pick the code length: **6 digits** (default) or **8 digits**, depending on what the service issues. When a URI is pasted, its `digits=` parameter selects this automatically. OTPs added before this option existed keep generating 6 digit codes.
 
 ![add section](./img/screenshot_add.png)
 

@@ -375,6 +375,12 @@
           <label for="user">User (Account):</label>
           <input type="text" id="user" name="user" placeholder="e.g. user@email.com">
 
+          <label for="digits">Code Length (digits):</label>
+          <select id="digits" name="digits">
+            <option value="6" selected>6 digits</option>
+            <option value="8">8 digits</option>
+          </select>
+
           <input type="submit" class="applyWifiButton" value="Add OTP">
         </form>
       </div>
@@ -466,13 +472,15 @@
       const hmacLength = keyArray.length;
       const label = document.getElementById('label').value;
       const user = document.getElementById('user').value;
+      const digits = parseInt(document.getElementById('digits').value, 10) === 8 ? 8 : 6;
 
       const payload = {
         id: id,
         data: keyArray,
         label: label,
         user: user,
-        hmac_length: hmacLength
+        hmac_length: hmacLength,
+        digits: digits
       };
 
       fetch(`${baseUrl}/add`, {
@@ -679,8 +687,8 @@
         console.warn(`Warning: Algorithm ${algorithm} detected. OXOTP only supports SHA1.`);
       }
 
-      if (digits && digits !== '6') {
-        console.warn(`Warning: ${digits} digits detected. OXOTP expects 6 digits.`);
+      if (digits !== '6' && digits !== '8') {
+        console.warn(`Warning: ${digits} digits detected. OXOTP supports 6 or 8 digits.`);
       }
 
       if (period && period !== '30') {
@@ -712,6 +720,7 @@
         document.getElementById('key').value = parsed.secret;
         document.getElementById('label').value = parsed.label;
         document.getElementById('user').value = parsed.user;
+        document.getElementById('digits').value = (parsed.digits === '8') ? '8' : '6';
 
         findNextAvailableId().then(nextId => {
           document.getElementById('id').value = nextId;
@@ -721,8 +730,8 @@
         if (parsed.algorithm && parsed.algorithm.toUpperCase() !== 'SHA1') {
           warnings.push(`Algorithm: ${parsed.algorithm} (OXOTP uses SHA1)`);
         }
-        if (parsed.digits && parsed.digits !== '6') {
-          warnings.push(`Digits: ${parsed.digits} (OXOTP uses 6)`);
+        if (parsed.digits !== '6' && parsed.digits !== '8') {
+          warnings.push(`Digits: ${parsed.digits} (OXOTP supports 6 or 8, falling back to 6)`);
         }
         if (parsed.period && parsed.period !== '30') {
           warnings.push(`Period: ${parsed.period}s (OXOTP uses 30s)`);
@@ -779,7 +788,8 @@
           listItem.innerHTML = `
             <strong>ID: </strong>${entry.id}<br>
             <strong>Label:</strong> ${entry.L}<br>
-            <strong>User:</strong> ${entry.U}
+            <strong>User:</strong> ${entry.U}<br>
+            <strong>Digits:</strong> ${entry.D || 6}
             <button type="button" class="deleteButton" onclick="deleteOTP(${entry.id})">delete</button>
           `;
           otpList.appendChild(listItem);

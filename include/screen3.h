@@ -285,6 +285,10 @@ void Wifi_screen() {
         otpLabel = "L" + otpLabel;
         NVS.setString (otpLabel, jsondata["label"]);
 
+        String otpDigits = jsondata["id"];
+        otpDigits = "D" + otpDigits;
+        NVS.setInt (otpDigits, normalizeOTPDigits(jsondata["digits"] | OTP_DIGITS_DEFAULT));
+
         NVS.setBlob(jsondata["id"], hmacKey, hmac_length);
 
         server.send(200, " text/html", "OK");
@@ -323,9 +327,13 @@ void Wifi_screen() {
       String otpLabel = jsondata["id"];
       otpLabel = "L" + otpLabel;
 
+      String otpDigits = jsondata["id"];
+      otpDigits = "D" + otpDigits;
+
       NVS.erase(otpBool);
       NVS.erase(otpLabel);
       NVS.erase(otpUser);
+      NVS.erase(otpDigits);
       NVS.erase(String(id));
     } else {
       server.send(200, " text/html", "LOCKED");
@@ -542,6 +550,7 @@ void Wifi_screen() {
         jsondata["OTPs"][json_counter]["L"] = NVS.getString (otpLabel);
         String  otpUser = "U" + String ((i + 1));
         jsondata["OTPs"][json_counter]["U"] = NVS.getString (otpUser);
+        jsondata["OTPs"][json_counter]["D"] = getOTPDigits (i + 1);
         json_counter++;
       }
     }

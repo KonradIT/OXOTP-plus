@@ -43,6 +43,7 @@ WebServer server(80);
 #include"Mishmash21pt7b.h"
 
 #include"variable_runtime.h"
+#include"totp_plus.h"
 #include"index.h"
 #include"css.h"
 #include"favico.h"
@@ -63,6 +64,19 @@ void setup() {
   M5.begin(cfg);
 
   NVS.begin();
+
+  // OTP entries stored before digit lengths were configurable have no "D" key;
+  // pin them to the 6 digit codes they were generated with.
+  if (NVS.getInt("digits_migr") != 1) {
+    for (int i = 1; i <= maxOTPs; i++) {
+      String otpBool = "B" + String(i);
+      String otpDigits = "D" + String(i);
+      if (NVS.getInt(otpBool) == 1 && NVS.getInt(otpDigits) == 0) {
+        NVS.setInt(otpDigits, OTP_DIGITS_DEFAULT);
+      }
+    }
+    NVS.setInt("digits_migr", 1);
+  }
 
   Serial.println("===============ESP32-OXOTP+==============");
   Serial.println("================= V 1.2 ================");
