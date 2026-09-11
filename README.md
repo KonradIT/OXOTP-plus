@@ -19,6 +19,7 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 - Support for original M5StickC
 - Support for Time Drift Correction, including alerting when the time is significantly out of sync
 - Support for 8 digit OTP codes alongside the usual 6 digit ones
+- Bluetooth LE keyboard: long press the button on the OTP screen to type the displayed code straight into a paired computer or phone
 
 ![otps section](./img/screenshot_otps.png)
 
@@ -49,6 +50,14 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 - Pick the code length: **6 digits** (default) or **8 digits**, depending on what the service issues. When a URI is pasted, its `digits=` parameter selects this automatically. OTPs added before this option existed keep generating 6 digit codes.
 
 ![add section](./img/screenshot_add.png)
+
+**6.** *(optional)* Pair the device as a Bluetooth keyboard to type codes without retyping them by hand:
+
+- The device advertises as **OXOTP+** from the moment it boots, no menu needed
+- Pair it from your computer or phone's Bluetooth settings like any other keyboard. The pairing is bonded, so it reconnects on its own afterwards
+- A Bluetooth icon appears in the toolbar, next to the battery, while a host is connected
+- On the **OTP** screen: a **short press** cycles to the next code (as before), a **long press** types the code that is currently on screen
+- The keystrokes use the number row, so a host set to a layout where those keys are not digits without Shift (AZERTY, for example) will receive the wrong characters
 
 ![2](./img/2.png)
 

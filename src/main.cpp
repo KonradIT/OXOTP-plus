@@ -44,6 +44,7 @@ WebServer server(80);
 
 #include"variable_runtime.h"
 #include"totp_plus.h"
+#include"ble_hid.h"
 #include"index.h"
 #include"css.h"
 #include"favico.h"
@@ -121,6 +122,9 @@ void setup() {
   M5.Lcd.fillScreen(bg_color);
   M5.Lcd.setTextSize(1);
   M5.Lcd.setTextColor(txt_color, bg_color);
+
+  // start the BLE HID keyboard so codes can be typed into a paired host
+  bleHidBegin();
 
   // get tm from RTC
   tm rtc_tm = M5.Rtc.getDateTime().get_tm();
