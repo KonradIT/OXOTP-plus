@@ -15,6 +15,7 @@ uint16_t txt_color = TFT_WHITE;
 enum screen {
   STICKC,
   STICKCPLUS2,
+  STICKCPLUSSE,
 };
 
 enum screen current_screen;
