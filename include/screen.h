@@ -33,11 +33,25 @@ PROGMEM const unsigned char OTP_bits[4][48] = {{
   }
 };
 
-PROGMEM const unsigned char BT_bits[48] = {
-    0x00, 0x00, 0xf8, 0xfe, 0xff, 0xfb, 0xfe, 0x0f, 0xfa, 0xfe, 0xef, 0xfa,     //BLEUTOOTH_ICON
-    0xee, 0xef, 0xfa, 0xca, 0xef, 0xfa, 0xa6, 0xef, 0xfa, 0xce, 0xea, 0xfa,
-    0xa6, 0xef, 0xfa, 0xca, 0xef, 0xfa, 0xee, 0x0f, 0xfb, 0xfe, 0xff, 0xf9,
-    0xfe, 0xff, 0xf8, 0xfe, 0x7f, 0xf8, 0xfe, 0x3f, 0xf8, 0x00, 0x00, 0xf8
+// Bluetooth rune, drawn bare (no tab frame) so it reads as a status indicator
+// next to the battery rather than as another menu tab.
+#define bt_icon_width 7
+#define bt_icon_height 13
+
+PROGMEM const unsigned char BT_bits[13] = {
+    0x08,   // ...#...
+    0x18,   // ...##..
+    0x28,   // ...#.#.
+    0x49,   // #..#..#
+    0x2a,   // .#.#.#.
+    0x1c,   // ..###..
+    0x08,   // ...#...
+    0x1c,   // ..###..
+    0x2a,   // .#.#.#.
+    0x49,   // #..#..#
+    0x28,   // ...#.#.
+    0x18,   // ...##..
+    0x08    // ...#...
 };
 
 
@@ -146,12 +160,13 @@ void drawBTStatus() {
   }
   last_state = state;
 
-  int bt_x = screen_x - battery_width - batt_margin - OTP_width - 3;
+  int bt_x = screen_x - battery_width - batt_margin - bt_icon_width - 3;
+  int bt_y = (OTP_height - bt_icon_height) / 2;   // centred in the toolbar row
 
   if (state == 1) {
-    M5.Lcd.drawXBitmap(bt_x, 0, BT_bits, OTP_width, OTP_height, txt_color, bg_color);
+    M5.Lcd.drawXBitmap(bt_x, bt_y, BT_bits, bt_icon_width, bt_icon_height, txt_color, bg_color);
   } else {
-    M5.Lcd.fillRect(bt_x, 0, OTP_width, OTP_height, bg_color);
+    M5.Lcd.fillRect(bt_x, bt_y, bt_icon_width, bt_icon_height, bg_color);
   }
 }
 
