@@ -1,3 +1,24 @@
+#define BLE_NOTICE_MS 900
+
+// Type the code into the paired host and report what happened on screen.
+void typeCodeOverBLE(const String& code) {
+  M5.Lcd.fillRect(0, toolbar_height, screen_x, screen_y - toolbar_height, bg_color);
+  M5.Lcd.setFont(&beta8pt7b);
+  M5.Lcd.setCursor(10, (current_screen == STICKC) ? 45 : 77);
+
+  if (!bleHidConnected()) {
+    M5.Lcd.print("NO BT HOST");
+    M5.Speaker.tone(2000, 250);
+    delay(BLE_NOTICE_MS);
+    return;
+  }
+
+  M5.Lcd.print("TYPING...");
+  M5.Speaker.tone(5000, 100);
+  bleHidTypeCode(code);
+  delay(BLE_NOTICE_MS);
+}
+
 void OTP_screen() {
 
   int how_many_otp_registred = 0;
@@ -61,7 +82,9 @@ void OTP_screen() {
       }
     } else {
 
-      if (M5.BtnA.wasPressed() | firstloadScreen) {
+      // short press cycles through the stored OTPs, a long press types the
+      // displayed code over BLE, so the two must not both fire on one press
+      if (M5.BtnA.wasClicked() | firstloadScreen) {
         bool search = true;
         previousMillis = millis();
         
@@ -80,6 +103,11 @@ void OTP_screen() {
       int otpDigits = getOTPDigits(pointer);
       String newCode = generateTOTP(hmacKey, hmac_length, now(), otpDigits);
 
+      if (M5.BtnA.wasHold()) {
+        previousMillis = millis();
+        typeCodeOverBLE(newCode);
+        firstloadScreen = true;   // repaint the code once the notice clears
+      }
 
       if (totpCode != newCode | firstloadScreen) {
 
