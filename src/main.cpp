@@ -117,6 +117,10 @@ void setup() {
   #ifdef ARDUINO_M5STICK_C_PLUS_2
     current_screen = STICKCPLUS2;
   #endif
+
+  #ifdef ARDUINO_M5STICK_C_PLUS_SE
+    current_screen = STICKCPLUSSE;
+  #endif
   
 
   M5.Lcd.fillScreen(bg_color);

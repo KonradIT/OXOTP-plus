@@ -65,7 +65,7 @@ void Time_drift_screen() {
       }
       M5.Lcd.setTextColor(selected_field == 1 ? TFT_YELLOW : txt_color, bg_color);
       M5.Lcd.printf("Seconds: %+d", (int)adjust_seconds);
-      if (current_screen == STICKCPLUS2) {
+      if (current_screen != STICKC) {
         M5.Lcd.setFont(&beta5pt7b);
         M5.Lcd.setTextColor(txt_color, bg_color);
         M5.Lcd.setCursor(5, 130);
@@ -184,7 +184,7 @@ void Time_drift_screen() {
         }
         M5.Lcd.setTextColor(selected_field == 1 ? TFT_YELLOW : txt_color, bg_color);
         M5.Lcd.printf("Seconds: %+d", (int)adjust_seconds);
-        if (current_screen == STICKCPLUS2) {
+        if (current_screen != STICKC) {
           M5.Lcd.setFont(&beta5pt7b);
           M5.Lcd.setTextColor(txt_color, bg_color);
           M5.Lcd.setCursor(5, 130);

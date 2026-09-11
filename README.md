@@ -2,7 +2,7 @@
 
 ![OXOTP+](https://i.imgur.com/PBGZbtp.png)
 
-**OTP Authenticator based on M5StickC / M5StickC Plus 2 for 2FA codes**
+**OTP Authenticator based on M5StickC / M5StickC Plus 2 / M5StickC Plus SE for 2FA codes**
 
 -------
 
@@ -20,6 +20,7 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
 - Support for Time Drift Correction, including alerting when the time is significantly out of sync
 - Support for 8 digit OTP codes alongside the usual 6 digit ones
 - Bluetooth LE keyboard: long press the button on the OTP screen to type the displayed code straight into a paired computer or phone
+- Support for M5StickC Plus SE
 
 ![otps section](./img/screenshot_otps.png)
 
@@ -71,6 +72,7 @@ Further work done by [@KonradIT](https://github.com/KonradIT) to add:
  - Select the target environment:
    - `m5stick-c` for M5StickC
    - `m5stick-c-plus-2` for M5StickC Plus 2
+   - `m5stick-c-plus-se` for M5StickC Plus SE
  - Build: `pio run -e m5stick-c-plus-2`
  - Upload: `pio run -e m5stick-c-plus-2 --target upload`
 
@@ -99,6 +101,7 @@ Always keep a backup (even on paper) of your secrets if you intend to use this a
  
 ### COMPATIBILITY
 - M5StickC Plus 2
+- M5StickC Plus SE
 - M5StickC
 
 ## License 

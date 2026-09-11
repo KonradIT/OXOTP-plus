@@ -175,11 +175,11 @@ void Wifi_screen() {
     }
 
   // we don't want to show the password in the screen if not in AP mode
-  // only for M5StickC Plus 2
+  // only for M5StickC Plus 2 / Plus SE
   if (Wifi_Mode == "AP") {
     M5.Lcd.print (Wifi_PASSWORD);
 
-    if (current_screen == STICKCPLUS2) {
+    if (current_screen != STICKC) {
       M5.Lcd.setFont(&beta5pt7b);
       M5.Lcd.setCursor(10, 110);
       M5.Lcd.print("Auto-popup on connect");
